@@ -270,6 +270,67 @@ export default function JobPage() {
               <Chip label={statusChip.label} bg={statusChip.bg} color={statusChip.color} />
             </div>
 
+            {/* Your Review panel — shown inline when this job needs my action */}
+            {isMyReview && !submitted && (
+              <div
+                className="flex flex-col gap-3 p-3 rounded-xl"
+                style={{ backgroundColor: "#e4fad9", border: "1px solid #b5bdc3" }}
+              >
+                <div style={{ fontSize: 14, lineHeight: "18px", color: "#0c2737" }}>
+                  <span style={{ ...SB }}>Your Review </span>
+                  <span style={{ ...S }}>as {activeStage?.name}</span>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label style={{ fontSize: 12, lineHeight: "14px", color: "#0c2737", ...S }}>Comments</label>
+                  <textarea
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    rows={4}
+                    className="w-full rounded-lg resize-none outline-none"
+                    style={{
+                      backgroundColor: "white", border: "1px solid #b5bdc3",
+                      padding: "8px 12px", fontSize: 12, lineHeight: "14px",
+                      color: "#0c2737", ...S,
+                    }}
+                  />
+                </div>
+                <button
+                  onClick={() => setSubmitted(true)}
+                  className="w-full flex items-center justify-center gap-2 py-2 rounded-lg text-white"
+                  style={{ backgroundColor: "#48801c", fontSize: 12, lineHeight: "14px", ...S }}
+                >
+                  Approve Job
+                  <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+                    <circle cx="7.5" cy="7.5" r="6.5" stroke="white" strokeWidth="1.2" />
+                    <path d="M4.5 7.5l2 2 4-4" stroke="white" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </button>
+                <div className="flex gap-2">
+                  <button
+                    className="flex-1 flex items-center justify-center py-2 rounded-lg"
+                    style={{ border: "1px solid #48801c", color: "#48801c", fontSize: 12, lineHeight: "14px", ...S, backgroundColor: "transparent" }}
+                  >
+                    Request Revisions
+                  </button>
+                  <button
+                    className="flex-1 flex items-center justify-center py-2 rounded-lg"
+                    style={{ border: "1px solid #48801c", color: "#48801c", fontSize: 12, lineHeight: "14px", ...S, backgroundColor: "transparent" }}
+                  >
+                    Reject
+                  </button>
+                </div>
+              </div>
+            )}
+            {submitted && (
+              <div className="flex items-center gap-2 p-3 rounded-xl" style={{ backgroundColor: "#e4fad9", border: "1px solid #48801c" }}>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <circle cx="8" cy="8" r="7" stroke="#48801c" strokeWidth="1.5" />
+                  <path d="M5 8l2 2 4-4" stroke="#48801c" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <span style={{ fontSize: 14, lineHeight: "18px", color: "#48801c", ...SB }}>Job approved successfully.</span>
+              </div>
+            )}
+
             {/* Tags */}
             <div className="flex flex-wrap gap-2">
               <Chip label={job.brand} bg="#e6e9eb" color="#0c2737" />
@@ -369,68 +430,7 @@ export default function JobPage() {
               ))}
             </div>
 
-            {/* 2. Action panel */}
-            {(isMyReview || submitted) && (
-              <div style={{ height: 1, backgroundColor: "#e6e9eb" }} />
-            )}
-            {isMyReview && !submitted && (
-              <div className="flex flex-col gap-3">
-                <div style={{ fontSize: 14, lineHeight: "18px", color: "#0c2737" }}>
-                  <span style={{ ...SB }}>Your Review </span>
-                  <span style={{ ...S }}>as {activeStage?.name}</span>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <label style={{ fontSize: 12, lineHeight: "14px", color: "#0c2737", ...S }}>Comments</label>
-                  <textarea
-                    value={comment}
-                    onChange={(e) => setComment(e.target.value)}
-                    rows={4}
-                    className="w-full rounded-lg resize-none outline-none"
-                    style={{
-                      backgroundColor: "white", border: "1px solid #b5bdc3",
-                      padding: "8px 12px", fontSize: 12, lineHeight: "14px",
-                      color: "#0c2737", ...S,
-                    }}
-                  />
-                </div>
-                <button
-                  onClick={() => setSubmitted(true)}
-                  className="w-full flex items-center justify-center gap-2 py-2 rounded-lg text-white"
-                  style={{ backgroundColor: "#48801c", fontSize: 12, lineHeight: "14px", ...S }}
-                >
-                  Approve Job
-                  <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
-                    <circle cx="7.5" cy="7.5" r="6.5" stroke="white" strokeWidth="1.2" />
-                    <path d="M4.5 7.5l2 2 4-4" stroke="white" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </button>
-                <div className="flex gap-2">
-                  <button
-                    className="flex-1 flex items-center justify-center py-2 rounded-lg"
-                    style={{ border: "1px solid #48801c", color: "#48801c", fontSize: 12, lineHeight: "14px", ...S, backgroundColor: "transparent" }}
-                  >
-                    Request Revisions
-                  </button>
-                  <button
-                    className="flex-1 flex items-center justify-center py-2 rounded-lg"
-                    style={{ border: "1px solid #48801c", color: "#48801c", fontSize: 12, lineHeight: "14px", ...S, backgroundColor: "transparent" }}
-                  >
-                    Reject
-                  </button>
-                </div>
-              </div>
-            )}
-            {submitted && (
-              <div className="flex items-center gap-2 p-3 rounded-xl" style={{ backgroundColor: "#e4fad9", border: "1px solid #48801c" }}>
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <circle cx="8" cy="8" r="7" stroke="#48801c" strokeWidth="1.5" />
-                  <path d="M5 8l2 2 4-4" stroke="#48801c" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                <span style={{ fontSize: 14, lineHeight: "18px", color: "#48801c", ...SB }}>Job approved successfully.</span>
-              </div>
-            )}
-
-            {/* 3. Decision History */}
+            {/* 2. Decision History */}
             <DecisionHistory decisions={job.decisions} />
           </div>
 
