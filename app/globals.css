@@ -3,25 +3,48 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Figma exact tokens */
+  --text-primary:     #0c2737;
+  --text-title:       #0077ac;
+  --text-secondary:   #7e858b;
+  --border-light:     #eef1f3;
+  --border-medium:    #b5bdc3;
+  --blue:             #008ac0;
+  --blue-link:        #0077ac;
+  --green:            #48801c;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+html, body {
+  height: 100%;
+  font-size: 14px;
+  font-family: "Arial Nova", Arial, sans-serif;
+  background-color: #f8f9fb;
+  color: #0c2737;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #d5dade; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #b5bdc3; }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  .text-balance { text-wrap: balance; }
+
+  /* Figma typography utilities */
+  .font-bold-nova   { font-family: "Arial Nova", Arial, sans-serif; font-weight: 700; }
+  .font-regular-nova { font-family: "Arial Nova", Arial, sans-serif; font-weight: 400; }
+
+  /* Section banner — blue teal strip from Figma */
+  .section-banner {
+    @apply bg-nee-blue text-white px-6 py-3 flex items-center justify-between;
   }
 }
