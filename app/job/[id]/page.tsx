@@ -264,8 +264,8 @@ export default function JobPage() {
                 style={{ backgroundColor: "#e4fad9", border: "1px solid #b5bdc3" }}
               >
                 <div style={{ fontSize: 14, lineHeight: "18px", color: "#0c2737" }}>
-                  <span style={{ ...SB }}>Your Review </span>
-                  <span style={{ ...S }}>as {activeStage?.name}</span>
+                  <span style={{ ...SB }}>Your </span>
+                  <span style={{ ...S }}>as {activeStage?.name?.replace(/ Review$/, "")}</span>
                 </div>
                 <div className="flex flex-col gap-1">
                   <label style={{ fontSize: 12, lineHeight: "14px", color: "#0c2737", ...S }}>Comments</label>
@@ -373,12 +373,6 @@ export default function JobPage() {
               <Meta label="Submitted Date">{formatDate(job.submittedDate)}</Meta>
             </div>
 
-            {/* Description */}
-            <div className="flex flex-col gap-1">
-              <span style={{ fontSize: 12, lineHeight: "14px", color: "#72797e", ...S }}>Description</span>
-              <p style={{ fontSize: 14, lineHeight: "18px", color: "#0c2737", ...S, margin: 0 }}>{job.description}</p>
-            </div>
-
             {/* Assets */}
             <div className="flex flex-col gap-2">
               <span style={{ fontSize: 12, lineHeight: "14px", color: "#72797e", ...S }}>Assets to Review</span>
@@ -397,6 +391,12 @@ export default function JobPage() {
                   </span>
                 ))}
               </div>
+            </div>
+
+            {/* Description */}
+            <div className="flex flex-col gap-1">
+              <span style={{ fontSize: 12, lineHeight: "14px", color: "#72797e", ...S }}>Description</span>
+              <p style={{ fontSize: 14, lineHeight: "18px", color: "#0c2737", ...S, margin: 0 }}>{job.description}</p>
             </div>
           </div>
 
