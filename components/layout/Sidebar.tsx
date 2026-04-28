@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 const nav = [
   { href: "/",         label: "My Approvals" },
   { href: "/projects", label: "My Projects & Jobs" },
-  { href: "/admin",    label: "Pipeline" },
+  { href: "/admin",    label: "Pipeline View" },
 ];
 
 export function Sidebar() {

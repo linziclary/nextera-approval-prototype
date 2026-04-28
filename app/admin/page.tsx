@@ -191,13 +191,10 @@ export default function PipelinePage() {
   return (
     <div className="flex flex-col h-full overflow-hidden">
       {/* Header */}
-      <div className="flex-shrink-0 flex flex-col gap-1" style={{ marginBottom: 16 }}>
+      <div className="flex-shrink-0 flex items-center" style={{ height: 32, marginBottom: 16 }}>
         <h1 className="text-[#0c2737]" style={{ fontSize: 24, lineHeight: "28px", letterSpacing: "-0.144px", fontWeight: 700, ...S }}>
           Pipeline View
         </h1>
-        <p className="text-[#72797e]" style={{ fontSize: 14, lineHeight: "18px", ...S }}>
-          Approval pipeline data across your projects and jobs
-        </p>
       </div>
 
       <div className="flex-1 overflow-y-auto flex flex-col gap-4 pb-4">
