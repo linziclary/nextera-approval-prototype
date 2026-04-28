@@ -3,13 +3,17 @@ import { useState } from "react";
 import Link from "next/link";
 import { notFound, useParams } from "next/navigation";
 import { getJob, getProject } from "@/lib/data";
-import type { Priority, Stage } from "@/lib/types";
+import type { Decision, Priority, ReviewAction, Stage } from "@/lib/types";
 
 const S  = { fontFamily: "'Arial Nova', Arial, sans-serif" } as const;
 const SB = { fontFamily: "'Arial', Arial, sans-serif", fontWeight: 700 } as const;
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+}
+
+function formatTs(iso: string) {
+  return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" });
 }
 
 const PRIORITY_CHIP: Record<Priority, { bg: string; color: string }> = {
@@ -69,7 +73,6 @@ function StepIcon({ variant }: { variant: StepVariant }) {
       </div>
     );
   }
-  // upcoming
   return (
     <div className="flex items-center justify-center rounded-full border-2 flex-shrink-0" style={{ width: 21, height: 21, borderColor: "#e6e9eb", backgroundColor: "white" }}>
       <div className="rounded-full" style={{ width: 7, height: 7, backgroundColor: "#e6e9eb" }} />
@@ -89,24 +92,23 @@ function ApprovalStep({ stage, isLast, dueContext }: {
 
   const isNotRequired = stage.status === "skipped";
   const nameColor =
-    variant === "skipped"  ? "#b5bdc3" :
+    variant === "skipped"   ? "#b5bdc3" :
     variant === "completed" ? "#72797e" : "#0c2737";
 
-  const completedDate = stage.completedDate ? `Approved ${new Date(stage.completedDate).toLocaleDateString("en-US", { month: "long", day: "numeric" })}` : undefined;
+  const completedDate = stage.completedDate
+    ? `Approved ${new Date(stage.completedDate).toLocaleDateString("en-US", { month: "long", day: "numeric" })}`
+    : undefined;
   const dueLabel = stage.dueDate
     ? `Due ${new Date(stage.dueDate).toLocaleDateString("en-US", { month: "long", day: "numeric" })}`
     : dueContext;
 
   return (
     <div className="flex gap-2">
-      {/* Left: connector line + icon */}
       <div className="flex flex-col items-center flex-shrink-0" style={{ width: 21 }}>
         <div style={{ width: 1, flex: 1, minHeight: 8, backgroundColor: "#e6e9eb" }} />
         <StepIcon variant={variant} />
         {!isLast && <div style={{ width: 1, flex: 1, minHeight: 8, backgroundColor: "#e6e9eb" }} />}
       </div>
-
-      {/* Right: label + reviewer */}
       <div className="flex flex-col gap-1 py-2 flex-1 min-w-0">
         <span style={{ ...SB, fontSize: 12, lineHeight: "14px", color: nameColor }}>
           {stage.name}{isNotRequired ? " (Not Required)" : ""}
@@ -144,17 +146,73 @@ function ApprovalStep({ stage, isLast, dueContext }: {
   );
 }
 
+// ── Decision History ───────────────────────────────────────────────────────
+
+function actionChipStyle(action: ReviewAction): { bg: string; color: string } {
+  if (action === "Approved")           return { bg: "#e4fad9", color: "#48801c" };
+  if (action === "Revision Requested") return { bg: "#ffefce", color: "#503513" };
+  return                                      { bg: "#ffebe4", color: "#d04100" };
+}
+
+function DecisionHistory({ decisions }: { decisions: Decision[] }) {
+  if (decisions.length === 0) return null;
+  return (
+    <div className="flex flex-col gap-3">
+      <div style={{ height: 1, backgroundColor: "#e6e9eb" }} />
+      <h3 style={{ fontSize: 14, lineHeight: "18px", fontWeight: 700, color: "#0c2737", ...S }}>
+        Decision History
+      </h3>
+      <div className="flex flex-col gap-2">
+        {decisions.map((d) => {
+          const chip = actionChipStyle(d.action);
+          return (
+            <div
+              key={d.id}
+              className="flex flex-col gap-2 p-3 rounded-xl"
+              style={{ backgroundColor: "#f8f9fb", border: "1px solid #e6e9eb" }}
+            >
+              <div className="flex items-center gap-2 flex-wrap">
+                <span
+                  className="inline-flex items-center justify-center rounded-full flex-shrink-0"
+                  style={{ width: 20, height: 20, backgroundColor: d.reviewer.avatarColor, fontSize: 10, color: "white", ...S }}
+                >
+                  {d.reviewer.initials}
+                </span>
+                <span style={{ fontSize: 12, lineHeight: "14px", ...SB, color: "#0c2737" }}>{d.reviewer.name}</span>
+                <span style={{ fontSize: 12, lineHeight: "14px", color: "#72797e", ...S }}>{d.stageName}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span
+                  className="inline-flex items-center px-2 py-0.5 rounded-full whitespace-nowrap"
+                  style={{ backgroundColor: chip.bg, color: chip.color, fontSize: 11, lineHeight: "14px", ...S }}
+                >
+                  {d.action}
+                </span>
+                <span style={{ fontSize: 11, lineHeight: "14px", color: "#72797e", ...S }}>{formatTs(d.timestamp)}</span>
+              </div>
+              {d.comment && (
+                <p style={{ fontSize: 12, lineHeight: "16px", color: "#0c2737", ...S, margin: 0 }}>{d.comment}</p>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ── Page ──────────────────────────────────────────────────────────────────
+
 export default function JobPage() {
   const { id } = useParams<{ id: string }>();
-  const [comment, setComment] = useState(
-    "Overall, this is a strong start. I suggest we refine the messaging around wind energy's role in community resilience and job creation. Let's also ensure the talent usage rights are ironclad to avoid any future complications."
-  );
+  const [comment, setComment] = useState(() => getJob(id)?.reviewDraft ?? "");
   const [submitted, setSubmitted] = useState(false);
 
   const job = getJob(id);
   if (!job) return notFound();
   const project = getProject(job.projectId);
 
+  const today = new Date().toISOString().slice(0, 10);
   const priChip = PRIORITY_CHIP[job.priority];
   const activeStage = job.stages.find((s) => s.status === "active");
   const isMyReview = activeStage?.assignedTo?.id === "jmiles";
@@ -171,26 +229,38 @@ export default function JobPage() {
   return (
     <div className="flex flex-col h-full overflow-hidden">
       {/* Breadcrumb header */}
-      <div className="flex-shrink-0 flex items-center" style={{ height: 32, marginBottom: 16 }}>
-        <div className="flex items-center justify-between gap-4 w-full">
-          <div className="flex items-center gap-2" style={{ fontSize: 14, lineHeight: "18px", color: "#72797e", ...S }}>
-            <Link href="/" style={{ color: "#72797e", textDecoration: "none" }}>My Approvals</Link>
-            {project && (
-              <>
-                <span>/</span>
-                <Link href="/projects" style={{ color: "#72797e", textDecoration: "none" }}>{project.name}</Link>
-              </>
-            )}
-            <span>/</span>
-            <span style={{ ...SB, color: "#0c2737" }}>{job.title}</span>
-          </div>
+      <div className="flex-shrink-0 flex items-center" style={{ height: 32, marginBottom: 8 }}>
+        <div className="flex items-center gap-2" style={{ fontSize: 14, lineHeight: "18px", color: "#72797e", ...S }}>
+          <Link href="/" style={{ color: "#72797e", textDecoration: "none" }}>My Approvals</Link>
+          {project && (
+            <>
+              <span>/</span>
+              <Link href="/projects" style={{ color: "#72797e", textDecoration: "none" }}>{project.name}</Link>
+            </>
+          )}
+          <span>/</span>
+          <span style={{ ...SB, color: "#0c2737" }}>{job.title}</span>
         </div>
       </div>
+
+      {/* Crisis urgency banner */}
+      {job.priority === "Crisis" && (
+        <div
+          className="flex-shrink-0 flex items-start gap-2 px-4 py-3 rounded-xl"
+          style={{ backgroundColor: "#ffebe4", border: "1px solid #d04100", marginBottom: 8 }}
+        >
+          <span style={{ fontSize: 14, flexShrink: 0 }}>⚠</span>
+          <p style={{ fontSize: 13, lineHeight: "18px", color: "#d04100", margin: 0, ...S }}>
+            <strong>Crisis Priority</strong> — Immediate action required. This job auto-escalates if not actioned within 4 hours of assignment.
+          </p>
+        </div>
+      )}
 
       {/* Two-column layout */}
       <div className="flex-1 overflow-auto">
         <div className="flex gap-4 h-full items-start">
-          {/* Main card */}
+
+          {/* ── Left: job metadata ── */}
           <div className="bg-white rounded-2xl p-4 flex flex-col gap-4 flex-1 min-w-0">
             {/* Title + status chip */}
             <div className="flex items-start gap-2">
@@ -230,8 +300,13 @@ export default function JobPage() {
 
             {/* Metadata row 2 */}
             <div className="flex gap-4">
-              <Meta label="Initiative">{job.initiative || "Renewables Brand Elevation 2026"}</Meta>
-              <Meta label="Due Date">{formatDate(job.dueDate)}</Meta>
+              <Meta label="Initiative">{job.initiative}</Meta>
+              <Meta label="Due Date">
+                <span style={{ color: job.dueDate < today && job.status !== "approved" && job.status !== "cancelled" ? "#d04100" : "#0c2737" }}>
+                  {formatDate(job.dueDate)}
+                  {job.dueDate < today && job.status !== "approved" && job.status !== "cancelled" ? " — Overdue" : ""}
+                </span>
+              </Meta>
             </div>
 
             {/* Metadata row 3 */}
@@ -253,7 +328,7 @@ export default function JobPage() {
             {/* Description */}
             <div className="flex flex-col gap-1">
               <span style={{ fontSize: 12, lineHeight: "14px", color: "#72797e", ...S }}>Description</span>
-              <p style={{ fontSize: 14, lineHeight: "18px", color: "#0c2737", ...S }}>{job.description}</p>
+              <p style={{ fontSize: 14, lineHeight: "18px", color: "#0c2737", ...S, margin: 0 }}>{job.description}</p>
             </div>
 
             {/* Assets */}
@@ -275,10 +350,31 @@ export default function JobPage() {
                 ))}
               </div>
             </div>
+          </div>
 
-            {/* Review section */}
+          {/* ── Right: approval chain + action + history ── */}
+          <div className="bg-white rounded-2xl p-4 flex flex-col gap-4 flex-shrink-0" style={{ width: 300 }}>
+            {/* 1. Approval Chain — always at top */}
+            <h2 style={{ fontSize: 16, lineHeight: "20px", fontWeight: 700, color: "#0c2737", ...S }}>
+              Approval Chain
+            </h2>
+            <div className="flex flex-col">
+              {job.stages.map((stage, i) => (
+                <ApprovalStep
+                  key={stage.id}
+                  stage={stage}
+                  isLast={i === job.stages.length - 1}
+                  dueContext={job.dueDate ? `Due ${new Date(job.dueDate).toLocaleDateString("en-US", { month: "long", day: "numeric" })}` : undefined}
+                />
+              ))}
+            </div>
+
+            {/* 2. Action panel */}
+            {(isMyReview || submitted) && (
+              <div style={{ height: 1, backgroundColor: "#e6e9eb" }} />
+            )}
             {isMyReview && !submitted && (
-              <div className="flex flex-col gap-3 p-3 rounded-xl" style={{ backgroundColor: "#e6e9eb", border: "1px solid #b5bdc3" }}>
+              <div className="flex flex-col gap-3">
                 <div style={{ fontSize: 14, lineHeight: "18px", color: "#0c2737" }}>
                   <span style={{ ...SB }}>Your Review </span>
                   <span style={{ ...S }}>as {activeStage?.name}</span>
@@ -288,7 +384,7 @@ export default function JobPage() {
                   <textarea
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
-                    rows={3}
+                    rows={4}
                     className="w-full rounded-lg resize-none outline-none"
                     style={{
                       backgroundColor: "white", border: "1px solid #b5bdc3",
@@ -333,24 +429,11 @@ export default function JobPage() {
                 <span style={{ fontSize: 14, lineHeight: "18px", color: "#48801c", ...SB }}>Job approved successfully.</span>
               </div>
             )}
+
+            {/* 3. Decision History */}
+            <DecisionHistory decisions={job.decisions} />
           </div>
 
-          {/* Approval Chain sidebar */}
-          <div className="bg-white rounded-2xl p-4 flex flex-col gap-4 flex-shrink-0" style={{ width: 300 }}>
-            <h2 style={{ fontSize: 16, lineHeight: "20px", fontWeight: 700, color: "#0c2737", ...S }}>
-              Approval Chain
-            </h2>
-            <div className="flex flex-col">
-              {job.stages.map((stage, i) => (
-                <ApprovalStep
-                  key={stage.id}
-                  stage={stage}
-                  isLast={i === job.stages.length - 1}
-                  dueContext={job.dueDate ? `Due ${new Date(job.dueDate).toLocaleDateString("en-US", { month: "long", day: "numeric" })}` : undefined}
-                />
-              ))}
-            </div>
-          </div>
         </div>
       </div>
     </div>

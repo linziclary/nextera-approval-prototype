@@ -28,6 +28,14 @@ const PRIORITY_CHIP: Record<Priority, { bg: string; color: string }> = {
   "Quick Win": { bg: "#e4fad9", color: "#48801c" },
 };
 
+function crisisLabel(dueDate: string): string {
+  const diff = new Date(dueDate).getTime() - Date.now();
+  const hours = diff / (1000 * 60 * 60);
+  if (hours < 0) return "Escalating";
+  if (hours < 24) return `Due in ${Math.round(hours)}h`;
+  return `Due in ${Math.floor(hours / 24)}d`;
+}
+
 function Chip({ label, bg, color }: { label: string; bg: string; color: string }) {
   return (
     <span
@@ -68,7 +76,7 @@ function statusChip(job: Job): { label: string; bg: string; color: string } {
   return { label: "In Progress", bg: "#e1f5ff", color: "#0077ac" };
 }
 
-function JobCard({ job }: { job: Job }) {
+function JobCard({ job, isOverdue }: { job: Job; isOverdue?: boolean }) {
   const activeStage = job.stages.find((s) => s.status === "active");
   const isCrisis = job.priority === "Crisis";
   const priChip = PRIORITY_CHIP[job.priority];
@@ -78,17 +86,20 @@ function JobCard({ job }: { job: Job }) {
   return (
     <div
       className="bg-white rounded-lg p-4 flex flex-col gap-2"
-      style={{ border: `1px solid ${isCrisis ? "#d04100" : "transparent"}` }}
+      style={{ border: `1px solid ${isCrisis || isOverdue ? "#d04100" : "transparent"}` }}
     >
       {/* Row 1: title · due date · status chip */}
       <div className="flex items-center gap-2">
         <span className="flex-1 min-w-0" style={{ fontSize: 16, lineHeight: "20px", fontWeight: 700, color: "#0077ac", fontFamily: "'Arial Nova', Arial, sans-serif" }}>
           {job.title}
         </span>
-        <span className="text-[#72797e] whitespace-nowrap flex-shrink-0" style={{ fontSize: 12, lineHeight: "14px", ...S }}>
+        <span className="whitespace-nowrap flex-shrink-0" style={{ fontSize: 12, lineHeight: "14px", color: isOverdue ? "#d04100" : "#72797e", ...S }}>
           Due {formatDue(job.dueDate)}
         </span>
         <Chip label={chip.label} bg={chip.bg} color={chip.color} />
+        {job.priority === "Crisis" && (
+          <Chip label={crisisLabel(job.dueDate)} bg="#ffebe4" color="#d04100" />
+        )}
       </div>
 
       {/* Row 2: tags */}
@@ -150,7 +161,8 @@ export default function ApprovalsPage() {
   ];
 
   const currentJobs = tabs.find((t) => t.key === tab)!.jobs;
-  const overdueCount = ALL_JOBS.filter((j) => j.status === "active" && j.dueDate < new Date().toISOString().slice(0, 10)).length;
+  const today = new Date().toISOString().slice(0, 10);
+  const overdueCount = ALL_JOBS.filter((j) => j.status !== "approved" && j.status !== "cancelled" && j.dueDate < today).length;
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
@@ -208,7 +220,13 @@ export default function ApprovalsPage() {
           {currentJobs.length === 0 ? (
             <p className="text-sm text-[#72797e] py-8 text-center" style={S}>No jobs in this category.</p>
           ) : (
-            currentJobs.map((job) => <JobCard key={job.id} job={job} />)
+            currentJobs.map((job) => (
+              <JobCard
+                key={job.id}
+                job={job}
+                isOverdue={job.status !== "approved" && job.status !== "cancelled" && job.dueDate < today}
+              />
+            ))
           )}
         </div>
       </div>

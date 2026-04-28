@@ -66,7 +66,9 @@ function PriorityChip({ priority }: { priority: Priority }) {
 
 export default function ProjectsPage() {
   const [search, setSearch]     = useState("");
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({ "proj-001": true });
+  const [expanded, setExpanded] = useState<Record<string, boolean>>(
+    Object.fromEntries(PROJECTS.map((p) => [p.id, true]))
+  );
 
   const filtered = useMemo(() => {
     if (!search.trim()) return PROJECTS;

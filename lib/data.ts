@@ -159,6 +159,7 @@ const job1: Job = {
     { id: "communications", status: "skipped" },
   ]),
   decisions: [],
+  reviewDraft: "Strong creative concept overall. Before I approve, I want to confirm the talent usage rights are fully negotiated — specifically the exclusivity windows for the wind energy segments. Messaging around community impact looks good. Recommend proceeding.",
 };
 
 const job2: Job = {
@@ -207,6 +208,7 @@ const job2: Job = {
       timestamp: "2026-04-17T10:05:00Z",
     },
   ],
+  reviewDraft: "One-pager reads well for the IR audience. Q1 performance highlights are accurate per the latest data pull. Approving with minor suggestion to soften the forward-looking language in section 3.",
 };
 
 const job3: Job = {
@@ -277,6 +279,7 @@ const job3: Job = {
       comment: "Assets optimised and CDN-ready. Approved.",
     },
   ],
+  reviewDraft: "Assets optimised and CDN-ready. No outstanding blockers. Approved.",
 };
 
 // ─── Project 2 jobs ───────────────────────────────────────────────────────────
@@ -349,6 +352,7 @@ const job4: Job = {
       comment: "WCAG 2.1 AA compliant. Performance benchmarks met.",
     },
   ],
+  reviewDraft: "WCAG 2.1 AA compliant. Performance benchmarks met. Mobile responsiveness verified. Approved.",
 };
 
 const job5: Job = {
@@ -360,7 +364,7 @@ const job5: Job = {
   priority: "Crisis",
   brand: "NEER",
   initiative: "NEER Investor Relations Q2 Push",
-  dueDate: "2026-04-29",
+  dueDate: "2026-04-26",
   description:
     "Emergency paid social activation responding to competitive messaging in the clean energy investment space. Requires immediate legal review for financial claims compliance and rapid deployment across LinkedIn, X, and Meta.",
   submittedBy: REVIEWERS.sfernandez,
@@ -395,6 +399,7 @@ const job5: Job = {
     { id: "communications", status: "skipped" },
   ]),
   decisions: [],
+  reviewDraft: "Given the urgency of this Crisis activation, I've reviewed the core financial claims in the ad copy. The LinkedIn creative references forward-looking performance data — legal must clear this before any assets go live. Fast-tracking approval with that caveat explicitly noted.",
 };
 
 const job6: Job = {
@@ -406,7 +411,7 @@ const job6: Job = {
   priority: "Operational",
   brand: "M&C",
   initiative: "NextEra Leadership Summit 2026",
-  dueDate: "2026-06-01",
+  dueDate: "2026-04-21",
   description:
     "Landing page for the NextEra Leadership Summit Q4 2026. Includes speaker bios, agenda, registration form, and livestream embed. Returned for revision after Technical Review flagged accessibility issues with the registration form.",
   submittedBy: REVIEWERS.lclary,
@@ -474,6 +479,7 @@ const job6: Job = {
         "Registration form fails WCAG 2.1 AA — error states are colour-only and the date picker is keyboard-inaccessible. Please revise before resubmission.",
     },
   ],
+  reviewDraft: "The accessibility issues flagged are significant — error states must not rely on colour alone and the date picker must be keyboard-navigable. Withholding approval until these WCAG 2.1 AA requirements are resolved.",
 };
 
 // ─── Project 3 jobs ───────────────────────────────────────────────────────────
@@ -525,6 +531,7 @@ const job7: Job = {
       comment: "Content reviewed and on-brand. Approved.",
     },
   ],
+  reviewDraft: "Content is solid. Benefits open enrollment reminder should be moved to the top section given the upcoming deadline. CEO message has been reviewed and is approved. Ready to proceed.",
 };
 
 const job8: Job = {
@@ -573,6 +580,7 @@ const job8: Job = {
       timestamp: "2026-04-21T08:40:00Z",
     },
   ],
+  reviewDraft: "Technical specs reviewed. Dashboard access permissions and data refresh cadence look correct. Looker Studio embed is scoped correctly for the internal audience. No blockers.",
 };
 
 const job9: Job = {
@@ -629,6 +637,7 @@ const job9: Job = {
       timestamp: "2026-04-23T10:20:00Z",
     },
   ],
+  reviewDraft: "The April All-Hands recap captures the key announcements well. Chapter markers need to align with the official agenda timestamps. Captions look accurate from spot-check. Recommend approval pending timestamp fix.",
 };
 
 const job10: Job = {
@@ -679,6 +688,7 @@ const job10: Job = {
     },
   ]),
   decisions: [],
+  reviewDraft: "The webinar outline covers the key educational pillars well. I'd recommend tightening the Q&A format and ensuring the post-event social amplification plan is confirmed before we promote registration. Sofia should weigh in on messaging framing in strategist review.",
 };
 
 const job11: Job = {
@@ -725,6 +735,7 @@ const job11: Job = {
     },
   ],
   decisions: [],
+  reviewDraft: "Creative direction is on-brand for FPL. The EV co-branded content needs automotive partner sign-off confirmation before we proceed to the next stage. Paid social targeting parameters look well-defined.",
 };
 
 const job12: Job = {
@@ -766,6 +777,7 @@ const job12: Job = {
     },
   ],
   decisions: [],
+  reviewDraft: "Survey instrument has been reviewed. Sampling methodology is sound. Recommend adding an NPS benchmark question to compare against Q1 2025. Data retention and privacy compliance flags have been addressed.",
 };
 
 // ─── Project 4 jobs ───────────────────────────────────────────────────────────
@@ -801,6 +813,7 @@ const job13: Job = {
     { id: "dec-021", stageId: "dept-manager", stageName: "Department Manager Review",  reviewer: REVIEWERS.byoung, action: "Approved", timestamp: "2026-04-08T14:00:00Z" },
     { id: "dec-022", stageId: "legal",        stageName: "Legal Review",               reviewer: REVIEWERS.dkim,   action: "Approved", timestamp: "2026-04-12T09:30:00Z" },
   ],
+  reviewDraft: "Infographic is accurate against the published Q2 figures. Approved for distribution on nexteraenergy.com and the IR portal.",
 };
 
 const job14: Job = {
@@ -834,6 +847,7 @@ const job14: Job = {
     { id: "dec-024", stageId: "strategist",   stageName: "Strategist Review",         reviewer: REVIEWERS.sfernandez, action: "Approved", timestamp: "2026-04-20T15:00:00Z" },
     { id: "dec-025", stageId: "dept-manager", stageName: "Department Manager Review", reviewer: REVIEWERS.byoung,     action: "Approved", timestamp: "2026-04-23T09:00:00Z" },
   ],
+  reviewDraft: "Forward-looking statements in paragraphs 4 and 7 require safe harbour language before this can be approved. The clean energy pipeline milestones referenced are consistent with public disclosures. Pending that revision, ready to approve.",
 };
 
 const job15: Job = {
@@ -845,7 +859,7 @@ const job15: Job = {
   priority: "Crisis",
   brand: "NEER",
   initiative: "NEER Investor Relations Q2 Push",
-  dueDate: "2026-04-30",
+  dueDate: "2026-04-25",
   description:
     "Full event kit for the NEER Investor Day including presentation decks, press release, social media toolkit, and live-stream landing page.",
   submittedBy: REVIEWERS.sfernandez,
@@ -865,6 +879,7 @@ const job15: Job = {
   decisions: [
     { id: "dec-026", stageId: "team-lead", stageName: "Team Lead Review", reviewer: REVIEWERS.jmiles, action: "Approved", timestamp: "2026-04-22T08:45:00Z", comment: "Urgent — fast-tracking to strategist." },
   ],
+  reviewDraft: "Press release is ready. Presentation deck needs the Q2 preliminary numbers updated to reflect the May 2 data release. Social toolkit messaging is aligned with investor day positioning. Expediting review given Crisis priority.",
 };
 
 // ─── Project 5 jobs ───────────────────────────────────────────────────────────
@@ -878,7 +893,7 @@ const job16: Job = {
   priority: "Operational",
   brand: "FPL",
   initiative: "FPL Storm Season Readiness 2026",
-  dueDate: "2026-05-01",
+  dueDate: "2026-04-23",
   description:
     "Updated customer-facing preparedness guide covering outage kits, evacuation resources, and FPL's storm response SLAs. Returned for revision after Legal flagged outdated evacuation zone references.",
   submittedBy: REVIEWERS.ptran,
@@ -904,6 +919,7 @@ const job16: Job = {
     { id: "dec-029", stageId: "dept-manager", stageName: "Department Manager Review", reviewer: REVIEWERS.byoung,  action: "Approved",           timestamp: "2026-04-15T09:00:00Z" },
     { id: "dec-030", stageId: "legal",        stageName: "Legal Review",              reviewer: REVIEWERS.dkim,    action: "Revision Requested", timestamp: "2026-04-19T11:30:00Z", comment: "Evacuation zone references are based on 2024 county maps — please update to 2026 FEMA data before resubmission." },
   ],
+  reviewDraft: "As flagged in prior review — evacuation zone references must be updated to 2026 FEMA maps before this can be approved. All other legal language in the guide has been cleared.",
 };
 
 const job17: Job = {
@@ -936,6 +952,7 @@ const job17: Job = {
     { id: "dec-031", stageId: "team-lead",  stageName: "Team Lead Review",   reviewer: REVIEWERS.jmiles,     action: "Approved", timestamp: "2026-04-19T10:00:00Z" },
     { id: "dec-032", stageId: "strategist", stageName: "Strategist Review",  reviewer: REVIEWERS.sfernandez, action: "Approved", timestamp: "2026-04-22T16:00:00Z" },
   ],
+  reviewDraft: "Campaign brief reviewed. Paid search keyword targeting is appropriate. Display creative needs FPL brand compliance sign-off — confirm with the brand team before final approval.",
 };
 
 const job18: Job = {
@@ -969,6 +986,7 @@ const job18: Job = {
     { id: "dec-034", stageId: "dept-manager", stageName: "Department Manager Review", reviewer: REVIEWERS.byoung,   action: "Approved", timestamp: "2026-04-13T11:00:00Z" },
     { id: "dec-035", stageId: "technical",    stageName: "Technical Review",          reviewer: REVIEWERS.ahartman, action: "Approved", timestamp: "2026-04-17T15:30:00Z", comment: "Passes Core Web Vitals and accessibility checks." },
   ],
+  reviewDraft: "Passes Core Web Vitals and accessibility checks. Single-destination landing page is well-structured. Approved.",
 };
 
 // ─── Projects ─────────────────────────────────────────────────────────────────

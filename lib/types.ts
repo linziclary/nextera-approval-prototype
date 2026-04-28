@@ -62,6 +62,7 @@ export interface Job {
   currentStage: StageId | null;
   stages: Stage[];
   decisions: Decision[];
+  reviewDraft?: string;
   cancellationReason?: string;
   returnedComment?: string;
   returnedStage?: string;
