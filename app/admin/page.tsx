@@ -74,7 +74,7 @@ function BarChart({ data, color }: { data: { label: string; value: number }[]; c
 }
 
 type SortDir = "asc" | "desc";
-type SortCol = "project" | "title" | "brand" | "channel" | "priority" | "stage" | "reviewer" | "dueDate" | "status";
+type SortCol = "title" | "priority" | "stage" | "reviewer" | "dueDate" | "status";
 
 function SortIcon({ active, dir }: { active: boolean; dir: SortDir }) {
   return (
@@ -163,10 +163,7 @@ export default function PipelinePage() {
       let vb: string | number = "";
 
       switch (sortCol) {
-        case "project":  va = projectMap[a.projectId] ?? ""; vb = projectMap[b.projectId] ?? ""; break;
         case "title":    va = a.title;    vb = b.title;    break;
-        case "brand":    va = a.brand;    vb = b.brand;    break;
-        case "channel":  va = a.channels[0] ?? ""; vb = b.channels[0] ?? ""; break;
         case "priority": va = PRIORITY_ORDER[a.priority]; vb = PRIORITY_ORDER[b.priority]; break;
         case "stage":    va = stageA?.name ?? ""; vb = stageB?.name ?? ""; break;
         case "reviewer": va = REVIEWERS[ridA]?.name ?? ""; vb = REVIEWERS[ridB]?.name ?? ""; break;
@@ -204,14 +201,10 @@ export default function PipelinePage() {
       </div>
 
       <div className="flex-1 overflow-y-auto flex flex-col gap-4 pb-4">
-        {/* KPI row 1 */}
+        {/* KPI row */}
         <div className="flex gap-4">
           <MetricCard value={activeJobs.length} label="Active Jobs" sub="Jobs that are started and not yet completed" />
           <MetricCard value={overdueJobs.length} label="Jobs Overdue" sub={overdueJobs.length === 0 ? "Currently all are within due date" : "Past due date"} />
-        </div>
-
-        {/* KPI row 2 */}
-        <div className="flex gap-4">
           <MetricCard value={ALL_JOBS.length} label="Total Jobs" sub="Across all projects and brands" />
           <MetricCard value={avgDays} label="Days to Approval" sub="Average across approved jobs" />
         </div>
@@ -250,15 +243,12 @@ export default function PipelinePage() {
                 <tr>
                   {(
                     [
-                      ["project",  "Project"],
-                      ["title",    "Job Title"],
-                      ["brand",    "Brand"],
-                      ["channel",  "Channel"],
-                      ["priority", "Priority"],
+                      ["title",    "Job"],
+                      ["status",   "Status"],
                       ["stage",    "Current Stage"],
+                      ["priority", "Priority"],
                       ["reviewer", "Assigned Reviewer"],
                       ["dueDate",  "Due Date"],
-                      ["status",   "Status"],
                     ] as [SortCol, string][]
                   ).map(([col, label]) => (
                     <th key={col} style={cellHead} onClick={() => handleSort(col)}>
@@ -280,37 +270,32 @@ export default function PipelinePage() {
 
                   return (
                     <tr key={job.id} className="hover:bg-[#f8f9fb] transition-colors">
-                      {/* Project */}
-                      <td style={{ ...cellBody, color: "#72797e", maxWidth: 140, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                        {projectMap[job.projectId]}
-                      </td>
-
-                      {/* Job Title */}
-                      <td style={{ ...cellBody, maxWidth: 200 }}>
+                      {/* Job (title + project subtitle) */}
+                      <td style={{ ...cellBody, maxWidth: 240 }}>
                         <Link
                           href={`/job/${job.id}`}
                           style={{ color: "#0077ac", textDecoration: "none", ...SB, display: "block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
                         >
                           {job.title}
                         </Link>
+                        <span style={{ display: "block", color: "#72797e", fontSize: 11, marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontWeight: 400 }}>
+                          {projectMap[job.projectId]}
+                        </span>
                       </td>
 
-                      {/* Brand */}
-                      <td style={cellBody}>{job.brand}</td>
-
-                      {/* Channel */}
-                      <td style={{ ...cellBody, color: "#72797e", whiteSpace: "nowrap" }}>
-                        {job.channels.slice(0, 2).join(", ")}
-                      </td>
-
-                      {/* Priority */}
+                      {/* Status */}
                       <td style={cellBody}>
-                        <Chip label={job.priority} bg={priChip.bg} color={priChip.color} />
+                        <Chip label={sChip.label} bg={sChip.bg} color={sChip.color} />
                       </td>
 
                       {/* Current Stage */}
                       <td style={{ ...cellBody, color: "#72797e", whiteSpace: "nowrap" }}>
                         {activeStage?.name ?? (job.status === "approved" ? "Complete" : "—")}
+                      </td>
+
+                      {/* Priority */}
+                      <td style={cellBody}>
+                        <Chip label={job.priority} bg={priChip.bg} color={priChip.color} />
                       </td>
 
                       {/* Assigned Reviewer */}
@@ -336,11 +321,6 @@ export default function PipelinePage() {
                       <td style={{ ...cellBody, whiteSpace: "nowrap", color: isOverdue ? "#d04100" : "#0c2737" }}>
                         {formatDate(job.dueDate)}
                         {isOverdue && <span style={{ marginLeft: 4, fontSize: 10 }}>⚠</span>}
-                      </td>
-
-                      {/* Status */}
-                      <td style={cellBody}>
-                        <Chip label={sChip.label} bg={sChip.bg} color={sChip.color} />
                       </td>
 
                       {/* Reassign */}
@@ -369,7 +349,7 @@ export default function PipelinePage() {
                 })}
                 {rows.length === 0 && (
                   <tr>
-                    <td colSpan={10} style={{ ...cellBody, textAlign: "center", color: "#72797e", padding: "40px 16px" }}>
+                    <td colSpan={7} style={{ ...cellBody, textAlign: "center", color: "#72797e", padding: "40px 16px" }}>
                       No jobs match the current filters.
                     </td>
                   </tr>
