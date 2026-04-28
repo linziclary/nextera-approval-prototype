@@ -95,7 +95,7 @@ function FilterSelect({ label, value, options, onChange }: {
         onChange={(e) => onChange(e.target.value)}
         style={{
           fontSize: 12, lineHeight: "14px", color: "#0c2737", border: "1px solid #b5bdc3",
-          borderRadius: 6, padding: "4px 8px", backgroundColor: "white", cursor: "pointer",
+          borderRadius: 6, padding: "4px 28px 4px 8px", backgroundColor: "white", cursor: "pointer",
           outline: "none", ...S,
         }}
       >
@@ -237,9 +237,9 @@ export default function PipelinePage() {
               {rows.length}{rows.length !== ALL_JOBS.length ? ` of ${ALL_JOBS.length}` : ""} jobs
             </span>
             <div className="flex items-center gap-4 ml-auto flex-wrap">
-              <FilterSelect label="Brand"    value={filterBrand}    options={brandOptions}    onChange={setFilterBrand} />
-              <FilterSelect label="Priority" value={filterPriority} options={priorityOptions} onChange={setFilterPriority} />
-              <FilterSelect label="Status"   value={filterStatus}   options={statusOptions}   onChange={setFilterStatus} />
+              <FilterSelect label="Brand"            value={filterBrand}    options={brandOptions}    onChange={setFilterBrand} />
+              <FilterSelect label="Project Priority" value={filterPriority} options={priorityOptions} onChange={setFilterPriority} />
+              <FilterSelect label="Job Status"       value={filterStatus}   options={statusOptions}   onChange={setFilterStatus} />
             </div>
           </div>
 
