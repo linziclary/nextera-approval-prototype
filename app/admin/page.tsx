@@ -243,12 +243,12 @@ export default function PipelinePage() {
                 <tr>
                   {(
                     [
-                      ["title",    "Job"],
-                      ["status",   "Status"],
-                      ["stage",    "Current Stage"],
-                      ["priority", "Priority"],
-                      ["reviewer", "Assigned Reviewer"],
+                      ["title",    "Job / Project"],
                       ["dueDate",  "Due Date"],
+                      ["status",   "Job Status"],
+                      ["priority", "Project Priority"],
+                      ["stage",    "Current Stage"],
+                      ["reviewer", "Reviewer"],
                     ] as [SortCol, string][]
                   ).map(([col, label]) => (
                     <th key={col} style={cellHead} onClick={() => handleSort(col)}>
@@ -270,7 +270,7 @@ export default function PipelinePage() {
 
                   return (
                     <tr key={job.id} className="hover:bg-[#f8f9fb] transition-colors">
-                      {/* Job (title + project subtitle) */}
+                      {/* Job / Project */}
                       <td style={{ ...cellBody, maxWidth: 240 }}>
                         <Link
                           href={`/job/${job.id}`}
@@ -283,9 +283,20 @@ export default function PipelinePage() {
                         </span>
                       </td>
 
-                      {/* Status */}
+                      {/* Due Date */}
+                      <td style={{ ...cellBody, whiteSpace: "nowrap", color: isOverdue ? "#d04100" : "#0c2737" }}>
+                        {formatDate(job.dueDate)}
+                        {isOverdue && <span style={{ marginLeft: 4, fontSize: 10 }}>⚠</span>}
+                      </td>
+
+                      {/* Job Status */}
                       <td style={cellBody}>
                         <Chip label={sChip.label} bg={sChip.bg} color={sChip.color} />
+                      </td>
+
+                      {/* Project Priority */}
+                      <td style={cellBody}>
+                        <Chip label={job.priority} bg={priChip.bg} color={priChip.color} />
                       </td>
 
                       {/* Current Stage */}
@@ -293,12 +304,7 @@ export default function PipelinePage() {
                         {activeStage?.name ?? (job.status === "approved" ? "Complete" : "—")}
                       </td>
 
-                      {/* Priority */}
-                      <td style={cellBody}>
-                        <Chip label={job.priority} bg={priChip.bg} color={priChip.color} />
-                      </td>
-
-                      {/* Assigned Reviewer */}
+                      {/* Reviewer */}
                       <td style={cellBody}>
                         {reviewer ? (
                           <div className="flex items-center gap-1.5">
@@ -315,12 +321,6 @@ export default function PipelinePage() {
                         ) : (
                           <span style={{ color: "#b5bdc3" }}>—</span>
                         )}
-                      </td>
-
-                      {/* Due Date */}
-                      <td style={{ ...cellBody, whiteSpace: "nowrap", color: isOverdue ? "#d04100" : "#0c2737" }}>
-                        {formatDate(job.dueDate)}
-                        {isOverdue && <span style={{ marginLeft: 4, fontSize: 10 }}>⚠</span>}
                       </td>
 
                       {/* Reassign */}
