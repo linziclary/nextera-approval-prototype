@@ -227,7 +227,7 @@ const job3: Job = {
   submittedDate: "2026-04-20",
   status: "approved",
   currentStage: null,
-  daysPending: 0,
+  daysPending: 3,
   stages: buildStages([
     {
       id: "team-lead",
@@ -300,7 +300,7 @@ const job4: Job = {
   submittedDate: "2026-04-08",
   status: "approved",
   currentStage: null,
-  daysPending: 0,
+  daysPending: 6,
   stages: buildStages([
     {
       id: "team-lead",
@@ -798,7 +798,7 @@ const job13: Job = {
   submittedDate: "2026-04-02",
   status: "approved",
   currentStage: null,
-  daysPending: 0,
+  daysPending: 10,
   stages: buildStages([
     { id: "team-lead",    status: "completed", assignedTo: REVIEWERS.jmiles,      completedDate: "2026-04-04" },
     { id: "safety",       status: "skipped" },
@@ -971,7 +971,7 @@ const job18: Job = {
   submittedDate: "2026-04-08",
   status: "approved",
   currentStage: null,
-  daysPending: 0,
+  daysPending: 9,
   stages: buildStages([
     { id: "team-lead",    status: "completed", assignedTo: REVIEWERS.jmiles,   completedDate: "2026-04-09" },
     { id: "safety",       status: "skipped" },
