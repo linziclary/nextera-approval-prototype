@@ -243,19 +243,6 @@ export default function JobPage() {
         </div>
       </div>
 
-      {/* Crisis urgency banner */}
-      {job.priority === "Crisis" && (
-        <div
-          className="flex-shrink-0 flex items-start gap-2 px-4 py-3 rounded-xl"
-          style={{ backgroundColor: "#ffebe4", border: "1px solid #d04100", marginBottom: 8 }}
-        >
-          <span style={{ fontSize: 14, flexShrink: 0 }}>⚠</span>
-          <p style={{ fontSize: 13, lineHeight: "18px", color: "#d04100", margin: 0, ...S }}>
-            <strong>Crisis Priority</strong> — Immediate action required. This job auto-escalates if not actioned within 4 hours of assignment.
-          </p>
-        </div>
-      )}
-
       {/* Two-column layout */}
       <div className="flex-1 overflow-auto">
         <div className="flex gap-4 h-full items-start">
