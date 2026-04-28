@@ -264,7 +264,7 @@ export default function JobPage() {
                 style={{ backgroundColor: "#e4fad9", border: "1px solid #b5bdc3" }}
               >
                 <div style={{ fontSize: 14, lineHeight: "18px", color: "#0c2737" }}>
-                  <span style={{ ...SB }}>Your </span>
+                  <span style={{ ...SB }}>Your Review </span>
                   <span style={{ ...S }}>as {activeStage?.name?.replace(/ Review$/, "")}</span>
                 </div>
                 <div className="flex flex-col gap-1">
