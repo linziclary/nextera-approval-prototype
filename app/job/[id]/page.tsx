@@ -146,16 +146,16 @@ function ApprovalStep({ stage, isLast, dueContext }: {
 
 export default function JobPage() {
   const { id } = useParams<{ id: string }>();
-  const job = getJob(id);
-  if (!job) return notFound();
-  const project = getProject(job.projectId);
-
-  const priChip = PRIORITY_CHIP[job.priority];
   const [comment, setComment] = useState(
     "Overall, this is a strong start. I suggest we refine the messaging around wind energy's role in community resilience and job creation. Let's also ensure the talent usage rights are ironclad to avoid any future complications."
   );
   const [submitted, setSubmitted] = useState(false);
 
+  const job = getJob(id);
+  if (!job) return notFound();
+  const project = getProject(job.projectId);
+
+  const priChip = PRIORITY_CHIP[job.priority];
   const activeStage = job.stages.find((s) => s.status === "active");
   const isMyReview = activeStage?.assignedTo?.id === "jmiles";
 
