@@ -64,11 +64,20 @@ function PriorityChip({ priority }: { priority: Priority }) {
   );
 }
 
+const STORAGE_KEY = "nextera-projects-expanded";
+
+function loadExpanded(): Record<string, boolean> {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+
 export default function ProjectsPage() {
   const [search, setSearch]     = useState("");
-  const [expanded, setExpanded] = useState<Record<string, boolean>>(
-    Object.fromEntries(PROJECTS.map((p) => [p.id, true]))
-  );
+  const [expanded, setExpanded] = useState<Record<string, boolean>>(loadExpanded);
 
   const filtered = useMemo(() => {
     if (!search.trim()) return PROJECTS;
@@ -81,7 +90,11 @@ export default function ProjectsPage() {
   }, [search]);
 
   function toggle(id: string) {
-    setExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
+    setExpanded((prev) => {
+      const next = { ...prev, [id]: !prev[id] };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      return next;
+    });
   }
 
   const cellBase: React.CSSProperties = {
